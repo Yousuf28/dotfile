@@ -1,4 +1,4 @@
-;; $DOOMDIR/config.el -*- lexical-binding: t; -*-
+;;; $DOOMDIR/config.el -*- lexical-binding: t; -*-
 
 ;; Place your private configuration here! Remember, you do not need to run 'doom
 ;; sync' after modifying this file!
@@ -108,8 +108,12 @@
    ess-offset-continued 2)
   ;; move to the end of the output when evaluating code
   (setq comint-move-point-for-output t)
+ (add-hook! 'inferior-ess-mode-hook
+(setq ansi-color-for-comint-mode 'filter))
+
   ;; ESS buffers should not be cleaned up automatically
   (add-hook 'inferior-ess-mode-hook #'doom-mark-buffer-as-real-h))
+
 
 ;; enrable rainbow delimeters in R
 
