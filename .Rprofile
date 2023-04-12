@@ -38,11 +38,18 @@ utils::rc.settings(ipck=TRUE)
 #if(Sys.getenv("TERM") == "xterm-256color")
  # library("colorout")
 
-li <- function(a.package){
-  suppressWarnings(suppressPackageStartupMessages(
-    library(a.package,character.only = TRUE)))
+## li <- function(a.package){
+##   suppressWarnings(suppressPackageStartupMessages(
+##     library(a.package,character.only = TRUE)))
+## }
+if (.Platform$OS.type == 'windows') {
+  Sys.setlocale(category = 'LC_ALL','English_United States.1250')
+} else {
+  Sys.setlocale(category = 'LC_ALL','en_US.UTF-8')
 }
-
 old <- getOption("defaultPackages")
 options(defaultPackages = c(old, "shiny", "data.table","httpgd"))
-print("use hgd(), hgd_browse() for plot in emacs")
+plot_emacs <- function(){
+  httpgd::hgd()
+  httpgd::hgd_browse()
+}
