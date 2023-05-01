@@ -1,0 +1,53 @@
+set relativenumber
+set numberwidth=2
+set cpoptions+=n
+inoremap kj <esc>
+vnoremap kj <esc>
+syntax enable
+noremap <Space> <Nop>
+map <Space> <Leader>
+
+" netrw setting
+" :Explore
+" :Sexplore horizontal
+" :Vexplore or :vex vertical
+" remove the banner,
+let g:netrw_banner = 0
+" let g:netrw_liststyle = 3
+"temporarily remove banner, press I
+"how filw open
+
+
+let g:netrw_altv = 1
+
+"set the width of directory explorer
+let g:netrw_winsize = 20
+"augroup ProjectDrawer
+""	autocmd!
+""	autocmd VimEnter * :Vexplore
+"augroup END
+
+" gitgutter setting
+set updatetime =100
+"airline setting
+let g:airline_extensions = []
+call plug#begin('~/.vim/plugged')
+Plug 'ncm2/ncm2'
+Plug 'gaalcaras/ncm-R'
+Plug 'jalvesaq/Nvim-R'
+Plug 'Raimondi/delimitMate'
+Plug 'drewtempelmeyer/palenight.vim'
+Plug 'romgrk/doom-one.vim'
+Plug 'rakr/vim-one'
+Plug 'joshdick/onedark.vim'
+"commnet stuff out
+Plug 'tpope/vim-commentary'
+Plug 'vim-airline/vim-airline'
+Plug 'vim-airline/vim-airline-themes'
+Plug 'junegunn/fzf.vim'
+Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
+Plug 'airblade/vim-gitgutter'
+Plug 'liuchengxu/vim-which-key'
+call plug#end()
+
+colorscheme onedark
