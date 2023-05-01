@@ -4,8 +4,9 @@ set cpoptions+=n
 inoremap kj <esc>
 vnoremap kj <esc>
 syntax enable
-noremap <Space> <Nop>
-map <Space> <Leader>
+" noremap <Space> <Nop>
+" map <Space> <Leader>
+let mapleader = "\<space>"
 
 " netrw setting
 " :Explore
@@ -31,8 +32,11 @@ let g:netrw_winsize = 20
 set updatetime =100
 "airline setting
 let g:airline_extensions = []
+let g:airline_section_y = ''
+let g:airline_section_z = '%3p%% %3l/%L:%3v'
 call plug#begin('~/.vim/plugged')
 Plug 'ncm2/ncm2'
+Plug 'roxma/nvim-yarp'
 Plug 'gaalcaras/ncm-R'
 Plug 'jalvesaq/Nvim-R'
 Plug 'Raimondi/delimitMate'
@@ -47,7 +51,11 @@ Plug 'vim-airline/vim-airline-themes'
 Plug 'junegunn/fzf.vim'
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'airblade/vim-gitgutter'
-Plug 'liuchengxu/vim-which-key'
 call plug#end()
+
+" if !has('nvim')
+" 	Plug 'roxma/vim-hug-neovim-rpc'
+" endif
+
 
 colorscheme onedark
