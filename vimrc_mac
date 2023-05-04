@@ -3,13 +3,43 @@ set numberwidth=2
 set cpoptions+=n
 inoremap kj <esc>
 vnoremap kj <esc>
+" You can split the window in Vim by typing :split or :vsplit.
+" Navigate the split view easier by pressing CTRL+j, CTRL+k, CTRL+h, or CTRL+l.
+nnoremap <c-j> <c-w>j
+nnoremap <c-k> <c-w>k
+nnoremap <c-h> <c-w>h
+nnoremap <c-l> <c-w>l
+
+" Resize split windows using arrow keys by pressing:
+" CTRL+UP, CTRL+DOWN, CTRL+LEFT, or CTRL+RIGHT.
+noremap <c-up> <c-w>+
+noremap <c-down> <c-w>-
+noremap <c-left> <c-w>>
+noremap <c-right> <c-w><
 syntax enable
+
+" set noncompatible
+filetype on
+set incsearch
+set ignorecase
+set smartcase
+set hlsearch
+
+set history=1000
+set wildmenu
+
+" Make wildmenu behave like similar to Bash completion.
+set wildmode=list:longest
+" There are certain files that we would never want to edit with Vim.
+" Wildmenu will ignore files with these extensions.
+set wildignore=*.docx,*.jpg,*.png,*.gif,*.pdf,*.pyc,*.exe,*.flv,*.img,*.xlsx
+
 " noremap <Space> <Nop>
-" map <Space> <Leader>
+" map <Space> <Leader> 
 let mapleader = "\<space>"
 
-" netrw setting
-" :Explore
+" netrw setting 
+" :Explore 
 " :Sexplore horizontal
 " :Vexplore or :vex vertical
 " remove the banner,
@@ -38,7 +68,7 @@ call plug#begin('~/.vim/plugged')
 Plug 'ncm2/ncm2'
 Plug 'roxma/nvim-yarp'
 Plug 'gaalcaras/ncm-R'
-Plug 'jalvesaq/Nvim-R'
+Plug 'jalvesaq/Nvim-R' 
 Plug 'Raimondi/delimitMate'
 Plug 'drewtempelmeyer/palenight.vim'
 Plug 'romgrk/doom-one.vim'
@@ -53,9 +83,31 @@ Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'airblade/vim-gitgutter'
 call plug#end()
 
+colorscheme onedark
 " if !has('nvim')
 " 	Plug 'roxma/vim-hug-neovim-rpc'
 " endif
 
+set cursorline
+" You can split a window into sections by typing `:split` or `:vsplit`.
+" Display cursorline and cursorcolumn ONLY in active window.
+augroup cursor_off
+    autocmd!
+    autocmd WinLeave * set nocursorline nocursorcolumn
+    autocmd WinEnter * set cursorline 
+augroup END
 
-colorscheme onedark
+" Clear status line when vimrc is reloaded.
+set statusline=
+
+" Status line left side.
+set statusline+=\ %F\ %M\ %Y\ %R
+
+" Use a divider to separate the left side from the right side.
+set statusline+=%=
+
+" Status line right side.
+set statusline+=\ ascii:\ %b\ hex:\ 0x%B\ row:\ %l\ col:\ %c\ percent:\ %p%%
+
+" Show the status on the second to last line.
+set laststatus=2
