@@ -60,6 +60,7 @@ Plug 'Raimondi/delimitMate'
 Plug 'tpope/vim-commentary'
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
+Plug 'tpope/vim-fugitive'
 Plug 'airblade/vim-gitgutter'
 Plug 'junegunn/fzf.vim'
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
@@ -68,6 +69,13 @@ Plug 'jpalardy/vim-slime'
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
 Plug 'vim-python/python-syntax'
 Plug 'ErichDonGubler/vim-sublime-monokai'
+Plug 'frazrepo/vim-rainbow'
+Plug 'mhinz/vim-startify'
+" dependency for startify for getting git branch
+Plug 'itchyny/vim-gitbranch'
+Plug 'easymotion/vim-easymotion'
+Plug 'vim-ctrlspace/vim-ctrlspace'
+Plug 'airblade/vim-rooter'
 " Plug 'vim-scripts/indentpython.vim'
 " Plug 'Valloric/YouCompleteMe'
 " Plug 'autozimu/LanguageClient-neovim', {
@@ -91,10 +99,96 @@ let g:python_highlight_all = 1
 colorscheme onedark
 "airline setting
 let g:airline_theme='wombat'
-let g:airline_extensions = []
+let g:airline_extensions = ['branch']
 let g:airline_section_y = ''
 let g:airline_section_z = '%3p%% %3l/%L:%3v'
+let g:airline#extensions#ctrlspace#enabled = 1
+let g:CtrlSpaceStatuslineFunction =
+   \  "airline#extensions#ctrlspace#statusline()"
 let g:slime_target = "vimterminal"
+" let g:airline#extensions#tabline#enabled = 1
+" let g:airline#extensions#branch#enabled = 1
+" let g:airline_powerline_fonts = 1
+" vim-rainbow setting
+let g:rainbow_active = 1
+" ctrl space 
+set hidden
+" let g:CtrlSpaceDefaultMappingKey = "<C-Space>"
+
+"fzf 
+function! s:find_git_root()
+  return system('git rev-parse --show-toplevel 2> /dev/null')[:-2]
+endfunction
+
+command! ProjectFiles execute 'Files' s:find_git_root()
+nnoremap <silent> <Leader>f :Files<CR>
+nnoremap <silent> <C-f> :Rg<CR>
+nnoremap <silent> <Leader>b :Buffers<CR>
+
+
+" " startify 
+" function! GetUniqueSessionName()
+"   let path = fnamemodify(getcwd(), ':~:t')
+"   let path = empty(path) ? 'no-project' : path
+"   let branch = gitbranch#name()
+"   let branch = empty(branch) ? '' : '-' . branch
+"   return substitute(path . branch, '/', '-', 'g')
+" endfunction
+
+" autocmd User        StartifyReady silent execute 'SLoad '  . GetUniqueSessionName()
+" autocmd VimLeavePre *             silent execute 'SSave! ' . GetUniqueSessionName()
+
+let g:startify_lists = [
+        \ { 'type': 'files',     'header': ['   Files']            },
+        \ { 'type': 'dir',       'header': ['   Directory '. getcwd()] },
+        \ { 'type': 'sessions',  'header': ['   Sessions']       },
+        \ { 'type': 'bookmarks', 'header': ['   Bookmarks']      },
+        \ { 'type': 'commands',  'header': ['   Commands']       },
+        \ ]
+
+" vim rooter
+let g:rooter_patterns = ['.git', 'Makefile', '*.sln', 'build/env.sh']
+
+let g:CtrlSpaceProjectRootMarkers = [
+         \ ".git"
+         \ ]
+set showtabline=0
+let g:airline_exclude_preview = 1
+
+" follow symlinked file
+function! FollowSymlink()
+  let current_file = expand('%:p')
+  " check if file type is a symlink
+  if getftype(current_file) == 'link'
+    " if it is a symlink resolve to the actual file path
+    "   and open the actual file
+    let actual_file = resolve(current_file)
+    silent! execute 'file ' . actual_file
+  end
+endfunction
+
+
+" set working directory to git project root
+" or directory of current file if not git project
+function! SetProjectRoot()
+  " default to the current file's directory
+  lcd %:p:h
+  let git_dir = system("git rev-parse --show-toplevel")
+  " See if the command output starts with 'fatal' (if it does, not in a git repo)
+  let is_not_git_dir = matchstr(git_dir, '^fatal:.*')
+  " if git project, change local directory to git project root
+  if empty(is_not_git_dir)
+    lcd `=git_dir`
+  endif
+endfunction
+
+" netrw: follow symlink and set working directory
+autocmd CursorMoved silent *
+  " short circuit for non-netrw files
+  \ if &filetype == 'netrw' |
+  \   call FollowSymlink() |
+  \   call SetProjectRoot() |
+  \ endif
 
 " cocvim
 
@@ -170,8 +264,8 @@ autocmd CursorHold * silent call CocActionAsync('highlight')
 nmap <leader>rn <Plug>(coc-rename)
 
 " Formatting selected code
-xmap <leader>f  <Plug>(coc-format-selected)
-nmap <leader>f  <Plug>(coc-format-selected)
+" xmap <leader>f  <Plug>(coc-format-selected)
+" nmap <leader>f  <Plug>(coc-format-selected)
 
 augroup mygroup
   autocmd!
@@ -258,3 +352,21 @@ nnoremap <silent><nowait> <space>j  :<C-u>CocNext<CR>
 nnoremap <silent><nowait> <space>k  :<C-u>CocPrev<CR>
 " Resume latest coc list
 nnoremap <silent><nowait> <space>p  :<C-u>CocListResume<CR>
+let g:startify_custom_header = [
+					\'                                                                                FFFFFFFFFFFFFFFFFFFFFF DDDDDDDDDDDDD                  AAA',               
+					\'                                                                                F::::::::::::::::::::F D::::::::::::DDD              A:::A',              
+					\'                                                                                F::::::::::::::::::::F D:::::::::::::::DD           A:::::A',             
+					\'                                                                                FF::::::FFFFFFFFF::::F DDD:::::DDDDD:::::D         A:::::::A',            
+					\'                                                                                  F:::::F       FFFFFF  D:::::D    D:::::D       A:::::::::A',           
+					\'                                                                                  F:::::F               D:::::D     D:::::D     A:::::A:::::A',          
+					\'                                                                                  F::::::FFFFFFFFFF     D:::::D     D:::::D    A:::::A A:::::A',         
+					\'                                                                                  F:::::::::::::::F     D:::::D     D:::::D   A:::::A   A:::::A',        
+					\'                                                                                  F:::::::::::::::F     D:::::D     D:::::D  A:::::A     A:::::A',       
+					\'                                                                                  F::::::FFFFFFFFFF     D:::::D     D:::::D A:::::AAAAAAAAA:::::A',      
+					\'                                                                                  F:::::F               D:::::D     D:::::DA:::::::::::::::::::::A',     
+					\'                                                                                  F:::::F               D:::::D    D:::::DA:::::AAAAAAAAAAAAA:::::A',    
+					\'                                                                                FF:::::::FF           DDD:::::DDDDD:::::DA:::::A             A:::::A',   
+					\'                                                                                F::::::::FF           D:::::::::::::::DDA:::::A               A:::::A',  
+					\'                                                                                F::::::::FF           D::::::::::::DDD A:::::A                 A:::::A', 
+					\'                                                                                FFFFFFFFFFF           DDDDDDDDDDDDD   AAAAAAA                   AAAAAAA',
+					\]                                                                                
