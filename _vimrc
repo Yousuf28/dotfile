@@ -32,7 +32,8 @@ let g:netrw_banner = 0
 
 set splitbelow
 set splitright
-
+set lines=55
+set columns=200
 " Clear status line when vimrc is reloaded.
 " set statusline=
 " gitgutter setting
@@ -94,6 +95,7 @@ augroup END
 
 " R related
 let R_assign = 0
+let R_path = 'C:/Program Files/R/R-4.1.2/bin/x64'
 " python
 let g:python_highlight_all = 1
 colorscheme onedark
@@ -114,6 +116,7 @@ let g:rainbow_active = 1
 " ctrl space 
 set hidden
 " let g:CtrlSpaceDefaultMappingKey = "<C-Space>"
+let g:CtrlSpaceDefaultMappingKey = "<leader>,"
 
 "fzf 
 function! s:find_git_root()
@@ -155,40 +158,40 @@ let g:CtrlSpaceProjectRootMarkers = [
 set showtabline=0
 let g:airline_exclude_preview = 1
 
-" follow symlinked file
-function! FollowSymlink()
-  let current_file = expand('%:p')
-  " check if file type is a symlink
-  if getftype(current_file) == 'link'
-    " if it is a symlink resolve to the actual file path
-    "   and open the actual file
-    let actual_file = resolve(current_file)
-    silent! execute 'file ' . actual_file
-  end
-endfunction
+" " follow symlinked file
+" function! FollowSymlink()
+"   let current_file = expand('%:p')
+"   " check if file type is a symlink
+"   if getftype(current_file) == 'link'
+"     " if it is a symlink resolve to the actual file path
+"     "   and open the actual file
+"     let actual_file = resolve(current_file)
+"     silent! execute 'file ' . actual_file
+"   end
+" endfunction
 
 
-" set working directory to git project root
-" or directory of current file if not git project
-function! SetProjectRoot()
-  " default to the current file's directory
-  lcd %:p:h
-  let git_dir = system("git rev-parse --show-toplevel")
-  " See if the command output starts with 'fatal' (if it does, not in a git repo)
-  let is_not_git_dir = matchstr(git_dir, '^fatal:.*')
-  " if git project, change local directory to git project root
-  if empty(is_not_git_dir)
-    lcd `=git_dir`
-  endif
-endfunction
+" " set working directory to git project root
+" " or directory of current file if not git project
+" function! SetProjectRoot()
+"   " default to the current file's directory
+"   lcd %:p:h
+"   let git_dir = system("git rev-parse --show-toplevel")
+"   " See if the command output starts with 'fatal' (if it does, not in a git repo)
+"   let is_not_git_dir = matchstr(git_dir, '^fatal:.*')
+"   " if git project, change local directory to git project root
+"   if empty(is_not_git_dir)
+"     lcd `=git_dir`
+"   endif
+" endfunction
 
-" netrw: follow symlink and set working directory
-autocmd CursorMoved silent *
-  " short circuit for non-netrw files
-  \ if &filetype == 'netrw' |
-  \   call FollowSymlink() |
-  \   call SetProjectRoot() |
-  \ endif
+" " netrw: follow symlink and set working directory
+" autocmd CursorMoved silent *
+"   " short circuit for non-netrw files
+"   \ if &filetype == 'netrw' |
+"   \   call FollowSymlink() |
+"   \   call SetProjectRoot() |
+"   \ endif
 
 " cocvim
 
