@@ -1,0 +1,10 @@
+\x auto
+\timing
+\pset border 2
+\pset null NULL
+\setenv editor 'c:\\Program Files (x86)\\Vim\\vim90\\gvim.exe'
+\set PROMPT1 '%[%033[1;32;40m%]%M:%> %n@%/%[%033[0m%]% # '
+\set PAGER OFF
+\set HISTSIZE 2000
+\set COMP_KEYWORD_CASE upper
+\set QUIET OFF
